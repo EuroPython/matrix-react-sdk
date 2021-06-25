@@ -140,13 +140,36 @@ export default class SenderProfile extends React.Component<IProps, IState> {
             />;
         }
 
+        const powerLevel = parseInt(mxEvent.powerLevel || 0, 10);
+        const role = textualPowerLevel(powerLevel, 0);
+        const powerLevelClass = `mx_powerLevel_${powerLevel}`;
+
+        // Name + flair
+        const nameFlair = (
+            <span>
+                <span className={`mx_SenderProfile_name ${colorClass}`}>
+                    { displayName }
+                </span>
+                {/* Exclude basic roles lie default or attendee */}
+                {![0, 1, 2, 3].includes(powerLevel) && (
+                    <span className={`sp_powerLevel ${powerLevelClass}`}>
+                        {" "}
+                        {role}
+                    </span>
+                )}
+                { flair }
+            </span>;
+            );
+
+
         return (
             <div className="mx_SenderProfile mx_SenderProfile_hover" dir="auto" onClick={this.props.onClick}>
                 <span className={`mx_SenderProfile_displayName ${colorClass}`}>
-                    { displayName }
+                    // { displayName }
+                    { nameFlair }
                 </span>
                 { mxidElement }
-                { flair }
+                // { flair }
             </div>
         );
     }
