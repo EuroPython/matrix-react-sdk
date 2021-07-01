@@ -27,14 +27,6 @@ interface IState {
     hover: boolean;
 }
 
-interface IProps {
-    helpText: string;
-}
-
-interface IState {
-    hover: boolean;
-}
-
 @replaceableComponent("views.elements.TooltipButton")
 export default class TooltipButton extends React.Component<IProps, IState> {
     constructor(props) {

@@ -44,23 +44,6 @@ interface IState {
     continueKind: string;
 }
 
-interface IProps {
-    onFinished: (success: boolean) => void;
-}
-
-interface IState {
-    shouldErase: boolean;
-    errStr: string;
-    authData: any; // for UIA
-    authEnabled: boolean; // see usages for information
-
-    // A few strings that are passed to InteractiveAuth for design or are displayed
-    // next to the InteractiveAuth component.
-    bodyText: string;
-    continueText: string;
-    continueKind: string;
-}
-
 @replaceableComponent("views.dialogs.DeactivateAccountDialog")
 export default class DeactivateAccountDialog extends React.Component<IProps, IState> {
     constructor(props) {

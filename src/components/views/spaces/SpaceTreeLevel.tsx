@@ -174,43 +174,6 @@ export class SpaceItem extends React.PureComponent<IItemProps, IItemState> {
         }
     };
 
-    private onKeyDown = (ev: React.KeyboardEvent) => {
-        let handled = true;
-        const action = getKeyBindingsManager().getRoomListAction(ev);
-        const hasChildren = this.state.childSpaces?.length;
-        switch (action) {
-            case RoomListAction.CollapseSection:
-                if (hasChildren && !this.isCollapsed) {
-                    this.toggleCollapse(ev);
-                } else {
-                    const parentItem = this.buttonRef?.current?.parentElement?.parentElement;
-                    const parentButton = parentItem?.previousElementSibling as HTMLElement;
-                    parentButton?.focus();
-                }
-                break;
-
-            case RoomListAction.ExpandSection:
-                if (hasChildren) {
-                    if (this.isCollapsed) {
-                        this.toggleCollapse(ev);
-                    } else {
-                        const childLevel = this.buttonRef?.current?.nextElementSibling;
-                        const firstSpaceItemChild = childLevel?.querySelector<HTMLLIElement>(".mx_SpaceItem");
-                        firstSpaceItemChild?.querySelector<HTMLDivElement>(".mx_SpaceButton")?.focus();
-                    }
-                }
-                break;
-
-            default:
-                handled = false;
-        }
-
-        if (handled) {
-            ev.stopPropagation();
-            ev.preventDefault();
-        }
-    };
-
     private onClick = (ev: React.MouseEvent) => {
         ev.preventDefault();
         ev.stopPropagation();

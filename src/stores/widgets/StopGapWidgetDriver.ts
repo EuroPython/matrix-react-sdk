@@ -189,50 +189,6 @@ export class StopGapWidgetDriver extends WidgetDriver {
         return results.slice(0, limit).map(e => e.event);
     }
 
-    public async readRoomEvents(eventType: string, msgtype: string | undefined, limit: number): Promise<object[]> {
-        limit = limit > 0 ? Math.min(limit, 25) : 25; // arbitrary choice
-
-        const client = MatrixClientPeg.get();
-        const roomId = ActiveRoomObserver.activeRoomId;
-        const room = client.getRoom(roomId);
-        if (!client || !roomId || !room) throw new Error("Not in a room or not attached to a client");
-
-        const results: MatrixEvent[] = [];
-        const events = room.getLiveTimeline().getEvents(); // timelines are most recent last
-        for (let i = events.length - 1; i > 0; i--) {
-            if (results.length >= limit) break;
-
-            const ev = events[i];
-            if (ev.getType() !== eventType) continue;
-            if (eventType === EventType.RoomMessage && msgtype && msgtype !== ev.getContent()['msgtype']) continue;
-            results.push(ev);
-        }
-
-        return results.map(e => e.event);
-    }
-
-    public async readStateEvents(eventType: string, stateKey: string | undefined, limit: number): Promise<object[]> {
-        limit = limit > 0 ? Math.min(limit, 100) : 100; // arbitrary choice
-
-        const client = MatrixClientPeg.get();
-        const roomId = ActiveRoomObserver.activeRoomId;
-        const room = client.getRoom(roomId);
-        if (!client || !roomId || !room) throw new Error("Not in a room or not attached to a client");
-
-        const results: MatrixEvent[] = [];
-        const state: Map<string, MatrixEvent> = room.currentState.events.get(eventType);
-        if (state) {
-            if (stateKey === "" || !!stateKey) {
-                const forKey = state.get(stateKey);
-                if (forKey) results.push(forKey);
-            } else {
-                results.push(...Array.from(state.values()));
-            }
-        }
-
-        return results.slice(0, limit).map(e => e.event);
-    }
-
     public async askOpenID(observer: SimpleObservable<IOpenIDUpdate>) {
         const oidcState = WidgetPermissionStore.instance.getOIDCState(
             this.forWidget, this.forWidgetKind, this.inRoomId,

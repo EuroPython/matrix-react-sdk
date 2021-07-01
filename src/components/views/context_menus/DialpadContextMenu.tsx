@@ -49,11 +49,6 @@ export default class DialpadContextMenu extends React.Component<IProps, IState> 
         this.setState({ value: ev.target.value });
     };
 
-    onChange = (ev) => {
-        this.setState({value: ev.target.value});
-    }
-
-
     render() {
         return <ContextMenu {...this.props}>
             <div className="mx_DialPadContextMenu_header">

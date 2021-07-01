@@ -313,7 +313,6 @@ interface IState {
 export default class EventTile extends React.Component<IProps, IState> {
     private suppressReadReceiptAnimation: boolean;
     private isListeningForReceipts: boolean;
-    private ref: React.RefObject<unknown>;
     private tile = React.createRef();
     private replyThread = React.createRef();
 
@@ -355,8 +354,6 @@ export default class EventTile extends React.Component<IProps, IState> {
         // to determine if we've already subscribed and use a combination of other flags to find
         // out if we should even be subscribed at all.
         this.isListeningForReceipts = false;
-
-        this.ref = React.createRef();
     }
 
     /**

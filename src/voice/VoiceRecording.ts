@@ -228,13 +228,6 @@ export class VoiceRecording extends EventEmitter implements IDestroyable {
         // should get that information pretty quick during the playback info.
     };
 
-    private onAudioProcess = (ev: AudioProcessingEvent) => {
-        this.processAudioUpdate(ev.playbackTime);
-
-        // We skip the functionality of the worklet regarding waveform calculations: we
-        // should get that information pretty quick during the playback info.
-    };
-
     private processAudioUpdate = (timeSeconds: number) => {
         if (!this.recording) return;
 

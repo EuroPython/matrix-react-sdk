@@ -23,10 +23,6 @@ interface IProps {
     onFinished: (success: boolean) => void;
 }
 
-interface IProps {
-    onFinished: (success: boolean) => void;
-}
-
 /*
  * A dialog for confirming a redaction.
  */

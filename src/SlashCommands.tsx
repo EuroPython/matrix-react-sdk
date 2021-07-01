@@ -154,10 +154,6 @@ function successSync(value: any) {
     return success(Promise.resolve(value));
 }
 
-function successSync(value: any) {
-    return success(Promise.resolve(value));
-}
-
 /* Disable the "unexpected this" error for these commands - all of the run
  * functions are called with `this` bound to the Command instance.
  */

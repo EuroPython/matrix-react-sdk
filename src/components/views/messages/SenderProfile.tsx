@@ -115,10 +115,6 @@ export default class SenderProfile extends React.Component<IProps, IState> {
         const displayName = mxEvent.sender?.rawDisplayName || mxEvent.getSender() || "";
         const mxid = mxEvent.sender?.userId || mxEvent.getSender() || "";
 
-        const disambiguate = mxEvent.sender?.disambiguate;
-        const displayName = mxEvent.sender?.rawDisplayName || mxEvent.getSender() || "";
-        const mxid = mxEvent.sender?.userId || mxEvent.getSender() || "";
-
         if (msgtype === 'm.emote') {
             return null; // emote message must include the name so don't duplicate it
         }

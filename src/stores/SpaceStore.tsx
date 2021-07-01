@@ -379,26 +379,6 @@ export class SpaceStoreClass extends AsyncStoreWithClient<IState> {
         }
     };
 
-    private showInHomeSpace = (room: Room) => {
-        if (SettingsStore.getValue("feature_spaces.all_rooms")) return true;
-        if (room.isSpaceRoom()) return false;
-        return !this.parentMap.get(room.roomId)?.size // put all orphaned rooms in the Home Space
-            || DMRoomMap.shared().getUserIdForRoomId(room.roomId) // put all DMs in the Home Space
-            || RoomListStore.instance.getTagsForRoom(room).includes(DefaultTagID.Favourite) // show all favourites
-    };
-
-    // Update a given room due to its tag changing (e.g DM-ness or Fav-ness)
-    // This can only change whether it shows up in the HOME_SPACE or not
-    private onRoomUpdate = (room: Room) => {
-        if (this.showInHomeSpace(room)) {
-            this.spaceFilteredRooms.get(HOME_SPACE)?.add(room.roomId);
-            this.emit(HOME_SPACE);
-        } else if (!this.orphanedRooms.has(room.roomId)) {
-            this.spaceFilteredRooms.get(HOME_SPACE)?.delete(room.roomId);
-            this.emit(HOME_SPACE);
-        }
-    };
-
     private onSpaceMembersChange = (ev: MatrixEvent) => {
         // skip this update if we do not have a DM with this user
         if (DMRoomMap.shared().getDMRoomsForUserId(ev.getStateKey()).length < 1) return;

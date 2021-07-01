@@ -43,23 +43,6 @@ interface IState {
     downloadProgress: string;
 }
 
-interface IProps {
-    onFinished: (success: boolean) => void;
-    initialText?: string;
-    label?: string;
-}
-
-interface IState {
-    sendLogs: boolean;
-    busy: boolean;
-    err: string;
-    issueUrl: string;
-    text: string;
-    progress: string;
-    downloadBusy: boolean;
-    downloadProgress: string;
-}
-
 @replaceableComponent("views.dialogs.BugReportDialog")
 export default class BugReportDialog extends React.Component<IProps, IState> {
     private unmounted: boolean;
