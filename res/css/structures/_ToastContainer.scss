@@ -140,6 +140,10 @@ limitations under the License.
                 min-width: 96px;
                 box-sizing: border-box;
             }
+
+            .mx_AccessibleButton + .mx_AccessibleButton {
+                margin-left: 5px;
+            }
         }
 
         .mx_Toast_description {

@@ -21,6 +21,7 @@ import { getUserNameColorClass } from '../../../utils/FormattingUtils';
 import MatrixClientContext from "../../../contexts/MatrixClientContext";
 import { replaceableComponent } from "../../../utils/replaceableComponent";
 import { MatrixEvent } from "matrix-js-sdk/src/models/event";
+import { RoomMember } from 'matrix-js-sdk/src/models/room-member';
 import { textualPowerLevel } from "../../../Roles";
 
 interface IProps {
@@ -40,7 +41,7 @@ export default class SenderProfile extends React.Component<IProps, IState> {
     private unmounted: boolean;
 
     constructor(props: IProps) {
-        super(props)
+        super(props);
         const senderId = this.props.mxEvent.getSender();
 
         this.state = {
@@ -57,7 +58,6 @@ export default class SenderProfile extends React.Component<IProps, IState> {
             this.getPublicisedGroups();
         }
 
-
         this.context.on('RoomState.events', this.onRoomStateEvents);
     }
 
@@ -71,7 +71,7 @@ export default class SenderProfile extends React.Component<IProps, IState> {
             const userGroups = await FlairStore.getPublicisedGroupsCached(
                 this.context, this.props.mxEvent.getSender(),
             );
-            this.setState({userGroups});
+            this.setState({ userGroups });
         }
     }
 
@@ -107,9 +107,13 @@ export default class SenderProfile extends React.Component<IProps, IState> {
     }
 
     render() {
-        const {mxEvent} = this.props;
+        const { mxEvent } = this.props;
         const colorClass = getUserNameColorClass(mxEvent.getSender());
-        const {msgtype} = mxEvent.getContent();
+        const { msgtype } = mxEvent.getContent();
+
+        const disambiguate = mxEvent.sender?.disambiguate;
+        const displayName = mxEvent.sender?.rawDisplayName || mxEvent.getSender() || "";
+        const mxid = mxEvent.sender?.userId || mxEvent.getSender() || "";
 
         const disambiguate = mxEvent.sender?.disambiguate;
         const displayName = mxEvent.sender?.rawDisplayName || mxEvent.getSender() || "";
@@ -140,20 +144,10 @@ export default class SenderProfile extends React.Component<IProps, IState> {
             />;
         }
 
-        const powerLevel = parseInt(mxEvent.powerLevel || 0, 10);
-        const role = textualPowerLevel(powerLevel, 0);
-        const powerLevelClass = `mx_powerLevel_${powerLevel}`;
-        let powerEl;
-        if (powerLevel > 9) {
-            powerEl = <span className={`sp_powerLevel ${powerLevelClass}`}>{" "}{role}</span>;
-        }
-
         return (
-            <div className="mx_SenderProfile mx_SenderProfile_hover" dir="auto" onClick={this.props.onClick}>
-                <span>
-                    <span className={`mx_SenderProfile_displayName ${colorClass}`}>
-                        { displayName }
-                    </span>
+            <div className="mx_SenderProfile" dir="auto" onClick={this.props.onClick}>
+                <span className={`mx_SenderProfile_displayName ${colorClass}`}>
+                    { displayName }
                 </span>
                 { mxidElement }
                 { flair }

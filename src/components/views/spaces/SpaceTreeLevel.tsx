@@ -118,7 +118,7 @@ export class SpaceItem extends React.PureComponent<IItemProps, IItemState> {
             this.props.parents,
             newCollapsedState,
         );
-        this.setState({collapsed: newCollapsedState});
+        this.setState({ collapsed: newCollapsedState });
         // don't bubble up so encapsulating button for space
         // doesn't get triggered
         evt.stopPropagation();
@@ -135,7 +135,44 @@ export class SpaceItem extends React.PureComponent<IItemProps, IItemState> {
                 height: 0,
             },
         });
-    }
+    };
+
+    private onKeyDown = (ev: React.KeyboardEvent) => {
+        let handled = true;
+        const action = getKeyBindingsManager().getRoomListAction(ev);
+        const hasChildren = this.state.childSpaces?.length;
+        switch (action) {
+            case RoomListAction.CollapseSection:
+                if (hasChildren && !this.isCollapsed) {
+                    this.toggleCollapse(ev);
+                } else {
+                    const parentItem = this.buttonRef?.current?.parentElement?.parentElement;
+                    const parentButton = parentItem?.previousElementSibling as HTMLElement;
+                    parentButton?.focus();
+                }
+                break;
+
+            case RoomListAction.ExpandSection:
+                if (hasChildren) {
+                    if (this.isCollapsed) {
+                        this.toggleCollapse(ev);
+                    } else {
+                        const childLevel = this.buttonRef?.current?.nextElementSibling;
+                        const firstSpaceItemChild = childLevel?.querySelector<HTMLLIElement>(".mx_SpaceItem");
+                        firstSpaceItemChild?.querySelector<HTMLDivElement>(".mx_SpaceButton")?.focus();
+                    }
+                }
+                break;
+
+            default:
+                handled = false;
+        }
+
+        if (handled) {
+            ev.stopPropagation();
+            ev.preventDefault();
+        }
+    };
 
     private onKeyDown = (ev: React.KeyboardEvent) => {
         let handled = true;
@@ -184,11 +221,11 @@ export class SpaceItem extends React.PureComponent<IItemProps, IItemState> {
         ev.preventDefault();
         ev.stopPropagation();
         const target = ev.target as HTMLButtonElement;
-        this.setState({contextMenuPosition: target.getBoundingClientRect()});
+        this.setState({ contextMenuPosition: target.getBoundingClientRect() });
     };
 
     private onMenuClose = () => {
-        this.setState({contextMenuPosition: null});
+        this.setState({ contextMenuPosition: null });
     };
 
     private onInviteClick = (ev: ButtonEvent) => {
@@ -196,7 +233,7 @@ export class SpaceItem extends React.PureComponent<IItemProps, IItemState> {
         ev.stopPropagation();
 
         showSpaceInvite(this.props.space);
-        this.setState({contextMenuPosition: null}); // also close the menu
+        this.setState({ contextMenuPosition: null }); // also close the menu
     };
 
     private onSettingsClick = (ev: ButtonEvent) => {
@@ -204,7 +241,7 @@ export class SpaceItem extends React.PureComponent<IItemProps, IItemState> {
         ev.stopPropagation();
 
         showSpaceSettings(this.context, this.props.space);
-        this.setState({contextMenuPosition: null}); // also close the menu
+        this.setState({ contextMenuPosition: null }); // also close the menu
     };
 
     private onLeaveClick = (ev: ButtonEvent) => {
@@ -215,7 +252,7 @@ export class SpaceItem extends React.PureComponent<IItemProps, IItemState> {
             action: "leave_room",
             room_id: this.props.space.roomId,
         });
-        this.setState({contextMenuPosition: null}); // also close the menu
+        this.setState({ contextMenuPosition: null }); // also close the menu
     };
 
     private onNewRoomClick = (ev: ButtonEvent) => {
@@ -223,7 +260,7 @@ export class SpaceItem extends React.PureComponent<IItemProps, IItemState> {
         ev.stopPropagation();
 
         showCreateNewRoom(this.context, this.props.space);
-        this.setState({contextMenuPosition: null}); // also close the menu
+        this.setState({ contextMenuPosition: null }); // also close the menu
     };
 
     private onAddExistingRoomClick = (ev: ButtonEvent) => {
@@ -231,7 +268,7 @@ export class SpaceItem extends React.PureComponent<IItemProps, IItemState> {
         ev.stopPropagation();
 
         showAddExistingRooms(this.context, this.props.space);
-        this.setState({contextMenuPosition: null}); // also close the menu
+        this.setState({ contextMenuPosition: null }); // also close the menu
     };
 
     private onMembersClick = (ev: ButtonEvent) => {
@@ -250,7 +287,7 @@ export class SpaceItem extends React.PureComponent<IItemProps, IItemState> {
             phase: RightPanelPhases.SpaceMemberList,
             refireParams: { space: this.props.space },
         });
-        this.setState({contextMenuPosition: null}); // also close the menu
+        this.setState({ contextMenuPosition: null }); // also close the menu
     };
 
     private onExploreRoomsClick = (ev: ButtonEvent) => {
@@ -261,7 +298,7 @@ export class SpaceItem extends React.PureComponent<IItemProps, IItemState> {
             action: "view_room",
             room_id: this.props.space.roomId,
         });
-        this.setState({contextMenuPosition: null}); // also close the menu
+        this.setState({ contextMenuPosition: null }); // also close the menu
     };
 
     private renderContextMenu(): React.ReactElement {
@@ -467,6 +504,6 @@ const SpaceTreeLevel: React.FC<ITreeLevelProps> = ({
             />);
         })}
     </ul>;
-}
+};
 
 export default SpaceTreeLevel;
